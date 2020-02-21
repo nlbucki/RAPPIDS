@@ -1,0 +1,3 @@
+Code related to the paper "Rectangular Pyramid Partitioning using Integrated Depth Sensors (RAPPIDS): A Fast Planner for Multicopter Navigation"
+
+To be updated soon...
