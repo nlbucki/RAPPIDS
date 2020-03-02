@@ -1,0 +1,40 @@
+{
+    "synthesis_specs": {
+        "camera_intrinsics": {
+            "w": "160",
+            "h": "120",
+            "depth_scale": "0.001",
+            "f": "96.660749999999993",
+            "cx": "80",
+            "cy": "60"
+        },
+        "num_scenes": "10000",
+        "num_obstacles": "2",
+        "obstacles_width_min": "0.20000000000000001",
+        "obstacles_width_max": "0.20000000000000001",
+        "obstacles_depth_min": "1.5",
+        "obstacles_depth_max": "3",
+        "random_seed": "0"
+    },
+    "benchmark_options": {
+        "display": "false",
+        "display_range_min": "0",
+        "display_range_max": "4",
+        "png_output": "false",
+        "vx_min": "-1",
+        "vx_max": "1",
+        "vy_min": "-1",
+        "vy_max": "1",
+        "vz_min": "0",
+        "vz_max": "4",
+        "ax_min": "-5",
+        "ax_max": "5",
+        "random_seed": "0"
+    },
+    "collision_time_options": {
+        "pyramid_gen_time": "0.00181",
+        "num_traj": "10000"
+    },
+    "AvgCollCheckTimePerTrajNs": "818.28417976000026",
+    "AvgPyramidsGen": "42.218000000000004"
+}
