@@ -2,7 +2,7 @@
 
 This repository contains source code implementing an algorithm for quickly finding local collision-free trajectories given a single depth image from an onboard camera. The algorithm leverages a new pyramid-based spatial partitioning method that enables rapid collision detection between candidate trajectories and the environment. Due to its efficiency, the algorithm can be run at high rates on computationally constrained hardware, evaluating thousands of candidate trajectories in milliseconds.
 
-The algorithm is described in a paper submitted to IEEE Robotics and Automation Letters (RA-L) with the International Conference on Intelligent Robots and Systems 2020 (IROS) option. A preprint version of the paper will be made available soon.
+The algorithm is described in a paper submitted to IEEE Robotics and Automation Letters (RA-L) with the International Conference on Intelligent Robots and Systems 2020 (IROS) option. A preprint version of the paper is available [here](https://arxiv.org/abs/2003.01245).
 
 Contact: Nathan Bucki (nathan_bucki@berkeley.edu)
 High Performance Robotics Lab, Dept. of Mechanical Engineering, UC Berkeley
