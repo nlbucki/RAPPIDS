@@ -19,6 +19,7 @@
 
 #pragma once
 #include <memory>
+#include <random>
 #include <iostream>
 #include <chrono>
 #include <stdint.h>
@@ -255,7 +256,7 @@ class DepthImagePlanner {
       int numTrajToEvaluate,
       double pyramidGenTimeLimit,
       RapidQuadrocopterTrajectoryGenerator::RapidTrajectoryGenerator& trajectory,
-      double &outTotalCollCheckTime);
+      double &outTotalCollCheckTime, double &outPercentCollisionFree);
 
   //! Uses a ray tracing based collision checking method to check the given trajectory for collisions
   //! This is used in the MeasureConservativeness function to evaluate the conservativeness of our planner.

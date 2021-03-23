@@ -936,6 +936,7 @@ void DepthImagePlanner::MeasureConservativeness(
   // Run our collision checker and compare to the results of the ground truth ray-tracing based method
   for (auto candidateTraj : trajs) {
     _startTime = std::chrono::high_resolution_clock::now();  // Prevents collision checking from ending early due to timing constraints
+    _allocatedComputationTime = 1000;
     bool collidesPlanner = !IsCollisionFree(candidateTraj);
     bool collidesGroundTruth = !IsCollisionFreeGroundTruth(candidateTraj);
     if (collidesGroundTruth && collidesPlanner) {
@@ -949,7 +950,7 @@ void DepthImagePlanner::MeasureConservativeness(
 void DepthImagePlanner::MeasureCollisionCheckingSpeed(
     int numTrajToEvaluate, double pyramidGenTimeLimit,
     RapidQuadrocopterTrajectoryGenerator::RapidTrajectoryGenerator& trajectory,
-    double &outTotalCollCheckTimeNs) {
+    double &outTotalCollCheckTimeNs, double &outPercentCollisionFree) {
   // The test described in Section IV.B of the RAPPIDS paper
 
   SetMaxPyramidGenTime(pyramidGenTimeLimit);
@@ -963,14 +964,28 @@ void DepthImagePlanner::MeasureCollisionCheckingSpeed(
     trajs.push_back(trajectory.GetTrajectory());
   }
 
+  int numCollisionFree = 0;
+  bool hasFeasTraj = false;
+
   outTotalCollCheckTimeNs = 0;
   for (auto candidateTraj : trajs) {
     _startTime = std::chrono::high_resolution_clock::now();  // Prevents collision checking from ending early due to timing constraints
-    IsCollisionFree(candidateTraj);
+    _allocatedComputationTime = 1000;
+    bool isCollisionFree = IsCollisionFree(candidateTraj);
     outTotalCollCheckTimeNs += duration_cast<nanoseconds>(
         high_resolution_clock::now() - _startTime).count();
+    if (isCollisionFree) {
+      numCollisionFree++;
+      hasFeasTraj = true;
+    }
   }
   outTotalCollCheckTimeNs -= _pyramidGenTimeNanoseconds;  // Don't count time spent generating pyramids
+  outPercentCollisionFree = double(numCollisionFree)
+      / double(numTrajToEvaluate);
+
+  if (hasFeasTraj) {
+    outPercentCollisionFree = 1;
+  }
 }
 
 bool DepthImagePlanner::IsCollisionFreeGroundTruth(Trajectory trajectory) {

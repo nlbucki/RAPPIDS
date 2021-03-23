@@ -219,6 +219,7 @@ static void run_conservativeness_benchmark(
 
   if (benchmark_options.display) {
     cv::namedWindow("display", cv::WINDOW_AUTOSIZE);
+    cv::moveWindow("display", 500,500);
   }
 
   // Set up the random number generators
@@ -330,6 +331,7 @@ static void run_collision_checking_time_benchmark(
 
   if (benchmark_options.display) {
     cv::namedWindow("display", cv::WINDOW_AUTOSIZE);
+    cv::moveWindow("display", 500,500);
   }
 
   std::mt19937 image_rdgen(synthesis_specs.random_seed);
@@ -343,6 +345,7 @@ static void run_collision_checking_time_benchmark(
   std::uniform_real_distribution<> random_ay(benchmark_options.ay_min,
                                              benchmark_options.ay_max);
   std::vector<double> collision_check_time;
+  std::vector<double> percent_collision_free_vec;
   std::vector<int> num_pyramids;
   for (int i = 0; i < synthesis_specs.num_scenes; i++) {
     if (i % 20 == 0) {
@@ -365,12 +368,15 @@ static void run_collision_checking_time_benchmark(
         Vec3(0, -random_ay(state_rdgen), 0), Vec3(0, 9.81, 0));
 
     double total_check_time;
+    double percent_collision_free;
     planner.MeasureCollisionCheckingSpeed(
         collision_time_options.num_traj,
-        collision_time_options.pyramid_gen_time, traj, total_check_time);
+        collision_time_options.pyramid_gen_time, traj, total_check_time,
+        percent_collision_free);
 
     collision_check_time.push_back(
         total_check_time / collision_time_options.num_traj);
+    percent_collision_free_vec.push_back(percent_collision_free);
     num_pyramids.push_back(planner.GetPyramids().size());
 
     if (benchmark_options.png_output) {
@@ -392,12 +398,16 @@ static void run_collision_checking_time_benchmark(
   benchmark_stats_t stats_num_pyramids = calculate_stats<int>(num_pyramids);
   root.put("AvgPyramidsGen", stats_num_pyramids.mean);
 
+  benchmark_stats_t percent_collision_free_stats = calculate_stats<double>(
+      percent_collision_free_vec);
+
   printf("Avg. Collision checking time per traj. = %f ns\n",
          stats_coll_check_time.mean);
   printf("Avg. pyramids per frame = %f\n", stats_num_pyramids.mean);
 
   print_stats(std::cout, "AvgCollCheckTimePerTrajNs", stats_coll_check_time);
   print_stats(std::cout, "AvgPyramidsGen", stats_num_pyramids);
+  print_stats(std::cout, "percent_collision_free_stats", percent_collision_free_stats);
 
   std::ofstream json_out("./data/collisionCheckingTime.json");
   write_json(json_out, root);
@@ -414,6 +424,7 @@ static void run_trajectory_coverage_benchmark(
 
   if (benchmark_options.display) {
     cv::namedWindow("display", cv::WINDOW_AUTOSIZE);
+    cv::moveWindow("display", 500,500);
   }
 
   std::mt19937 image_rdgen(synthesis_specs.random_seed);
